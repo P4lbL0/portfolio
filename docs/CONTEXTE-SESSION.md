@@ -149,17 +149,28 @@ balises.
 ### Les chiffres globaux de la page d'accueil
 
 La bande corail de l'accueil montre le bilan de **tout** son travail, pas d'un
-projet. Relevé le 1er septembre 2026 : **1 152 commits**, **310 migrations
-SQL**, **11 projets menés**, **7 en ligne**. Pour les recalculer, depuis
-`Desktop\Projet` :
+projet. Relevé le 1er septembre 2026 : **2 010 commits**, **776 migrations
+SQL**, **11 projets personnels**, **9 projets en stage**.
+
+**Périmètre décidé par Angelos, en connaissance de cause :** tous les dépôts sur
+lesquels il a travaillé, personnels (`Desktop\Projet`, plus `la-grece` en
+distant) comme professionnels (`Desktop\STAGE`, `Desktop\SAE-IAM`). Une partie
+de ces commits est signée de collègues — Raphael Bensamoun et Vincent Couturier.
+Il a été averti et a choisi de les inclure. C'est pour cette raison que le
+libellé dit « commits **sur les projets où j'ai travaillé** » et non « commits
+poussés ». **Ne pas « corriger » ce chiffre ni ce libellé sans le lui demander.**
+
+Répartition : 1 173 commits personnels + 837 en stage et SAÉ ; 310 migrations
+personnelles + 466 en stage. Pour recalculer, depuis `Desktop` :
 
 ```bash
-# commits qui sont bien les siens (ocr-resultat est collaboratif)
-git -C <dépôt> log --format='%an|%ae' | grep -ciE "p4lbl0|angelos|lemire"
-
-# migrations SQL
+git -C <dépôt> rev-list --count HEAD
 find <dépôt> -name '*.sql' | grep -i migration | wc -l
 ```
+
+Doublons à exclure du compte : `ES-CRM - Copie`, `ES-CRM - Copie (2)`,
+`alumnaiOG`. Le dossier `E3S-CRM` n'a pas de dépôt git : ses 209 migrations sont
+comptées sur la foi d'Angelos, qui était référent données sur ce périmètre.
 
 ---
 
