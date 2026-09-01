@@ -13,6 +13,19 @@
 export type Lien = { label: string; url: string };
 export type Fait = { label: string; valeur: string };
 
+/**
+ * Le film d'un projet, affiche en tete de fiche.
+ * Deposer le .mp4 dans `public/videos/` et son affiche dans `public/images/`.
+ * L'affiche est la seule chose chargee tant qu'on ne lance pas la lecture.
+ */
+export type Video = {
+  src: string;
+  /** Image fixe montree avant lecture (extraite du film lui-meme). */
+  affiche: string;
+  legende: string;
+  duree?: string;
+};
+
 /** Un bloc de contenu d'une fiche. Le rendu est géré par <Blocs />. */
 export type Bloc =
   | { type: "para"; texte: string }
@@ -33,7 +46,7 @@ export const profil = {
   nom: "Lemire",
   kicker: "Données · Full-stack · Thiais (94)",
   chapeau:
-    "Je fais tenir des bases qui servent tous les jours. **Quatorze semaines** à migrer et sécuriser deux CRM en production, sans jamais couper le service.",
+    "Je fais tenir des bases qui servent tous les jours. **Quatorze semaines** à migrer et sécuriser des logiciels métier en production, sans jamais couper le service.",
 
   // Photo : déposer le fichier dans public/ et mettre son nom ici.
   // Laisser la chaîne vide affiche un emplacement réservé au lieu d'une image cassée.
@@ -71,7 +84,7 @@ export const profil = {
 
   presentation: [
     "Ce qui m'intéresse, c'est la donnée quand elle est vivante. Pas un jeu d'essai propre dans un devoir noté : une base en production, ouverte à deux cents personnes qui s'en servent pour travailler, et qu'il faut faire évoluer sans perdre une ligne ni couper le service.",
-    "J'ai passé mon stage de fin d'études chez **Airbay Data**, éditeur de logiciels de gestion de la relation client, comme référent du volet données de deux produits. Le reste du temps, je mène mes propres projets de bout en bout — du schéma SQL jusqu'au déploiement. Ils ne dorment pas dans un dossier : ils sont en ligne, et des gens s'en servent.",
+    "J'ai passé mon stage de fin d'études chez **Airbay Data**, éditeur de logiciels de gestion de la relation client, comme référent du volet données — neuf chantiers en quatorze semaines. Le reste du temps, je mène mes propres projets de bout en bout : du schéma SQL jusqu'au déploiement, et jusqu'aux règles du jeu quand c'en est un. Ils ne dorment pas dans un dossier — ils sont en ligne, et des gens s'en servent.",
   ],
 
   citation:
@@ -1187,6 +1200,8 @@ export type Projet = {
   /** Technologies, affichées en étiquettes sur la fiche. */
   stack?: string[];
   chiffres?: Fait[];
+  /** Le film du projet, montré en tête de fiche sous la bande de chiffres. */
+  video?: Video;
   contenu?: Bloc[];
   /** Liens supplémentaires, en pied de fiche. */
   liens?: Lien[];
@@ -1347,6 +1362,13 @@ export const projets: Projet[] = [
       { valeur: "4", label: "salles de jeu" },
       { valeur: "17", label: "écrans" },
     ],
+    video: {
+      src: "/videos/amc-bank.mp4",
+      affiche: "/images/amc-bank-affiche.webp",
+      legende:
+        "Le film de présentation, écrit et monté avec le design system du produit — les écrans qu'on y voit sont les vrais.",
+      duree: "55 s",
+    },
     contenu: [
       {
         type: "para",
@@ -1586,6 +1608,18 @@ export const projets: Projet[] = [
         ],
       },
 
+      { type: "titre", texte: "Le banc d'essai" },
+      {
+        type: "para",
+        texte:
+          "Une passerelle de ce genre ne se teste pas contre des jeux d'essai : il lui faut de vrais systèmes en face. Nous avons donc monté l'écosystème complet en conteneurs — un **annuaire** avec son interface d'administration, le **gestionnaire d'identités** qui orchestre les mouvements de comptes, et un **logiciel de gestion** comme système cible.",
+      },
+      {
+        type: "para",
+        texte:
+          "C'est un travail qu'on ne montre jamais et qui prend un temps considérable : trois piles à faire démarrer, à faire se parler, et à remettre dans un état connu après chaque essai. J'en ai tiré un guide d'installation pour le groupe, parce qu'un environnement que les autres ne savent pas relancer ne sert à personne.",
+      },
+
       { type: "titre", texte: "Ce que j'y ai appris" },
       {
         type: "para",
@@ -1648,6 +1682,50 @@ export const projets: Projet[] = [
         ],
       },
 
+      { type: "titre", texte: "Des formulaires que le client change lui-même" },
+      {
+        type: "para",
+        texte:
+          "C'est la partie du site dont je suis le plus content, et elle ne se voit pas. Les demandes de devis — réparation d'une montre, personnalisation, reprise d'un ordinateur — n'ont pas les mêmes champs, et ces champs changent avec l'activité.",
+      },
+      {
+        type: "para",
+        texte:
+          "Plutôt que d'écrire chaque formulaire en dur, **la liste des champs est une donnée**, rangée en base et modifiable depuis l'administration. Ajouter une question à un devis ne demande ni développeur, ni redéploiement. La validation, elle, reste côté serveur : ce n'est pas parce que le formulaire est configurable qu'on fait confiance à ce qui arrive.",
+      },
+
+      { type: "titre", texte: "Un catalogue rapide qui reste à jour" },
+      {
+        type: "para",
+        texte:
+          "Les pages du catalogue sont **pré-calculées** plutôt que fabriquées à chaque visite : le visiteur reçoit une page déjà prête, ce qui est à la fois plus rapide pour lui et moins coûteux en base. L'inconvénient habituel de cette technique, c'est le décalage — on modifie un prix et l'ancienne page continue d'être servie.",
+      },
+      {
+        type: "para",
+        texte:
+          "La réponse a été de faire **invalider le cache par l'administration elle-même** : chaque enregistrement signale les pages devenues fausses, qui sont refabriquées à la visite suivante. Le gérant modifie son prix, il rafraîchit, c'est à jour.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Les photos passent par le serveur.",
+            texte:
+              "Une route dédiée reçoit l'image, la range dans le stockage et renvoie son adresse publique — avec un plafond de taille et un contrôle du type de fichier. Le navigateur n'écrit jamais directement dans le stockage.",
+          },
+          {
+            fort: "Savoir ce qui intéresse les gens.",
+            texte:
+              "Les vues de fiches et les clics vers les annonces sont comptés, et alimentent un écran de statistiques. C'est peu de chose, mais ça répond à la seule question que se pose un vendeur : sur quoi les gens cliquent, et qu'est-ce qui ne part pas.",
+          },
+          {
+            fort: "Marquer une vente.",
+            texte:
+              "Un produit vendu garde sa date, son prix réel et le canal par lequel il est parti. Puisque la transaction se fait ailleurs, c'est la seule façon de savoir ce que le site a réellement rapporté.",
+          },
+        ],
+      },
+
       { type: "titre", texte: "Ce que j'en retiens" },
       {
         type: "para",
@@ -1661,22 +1739,169 @@ export const projets: Projet[] = [
   {
     slug: "matchday",
     nom: "MatchDay",
-    resume: "Résultats et classements de football",
+    resume:
+      "Suivre ses équipes de football : les matchs à venir, la chaîne qui les diffuse, les résultats et les classements de six compétitions. Installable comme une application, et bilingue.",
     statut: "En ligne · apllifoot.vercel.app",
     enLigne: true,
-    vedette: false,
+    vedette: true,
     urlLive: "https://apllifoot.vercel.app",
     liens: [{ label: "En ligne", url: "https://apllifoot.vercel.app" }],
+    sousTitre:
+      "Une application de suivi du football, pensée pour répondre à une seule question : mon équipe joue quand, et sur quelle chaîne.",
+    meta: ["Projet personnel", "**2026**", "Rôle : **conception et développement**"],
+    stack: ["Next.js", "React", "Tailwind CSS", "PWA", "Vercel"],
+    chiffres: [
+      { valeur: "6", label: "compétitions suivies" },
+      { valeur: "2", label: "langues" },
+    ],
+    contenu: [
+      { type: "titre", texte: "L'idée" },
+      {
+        type: "para",
+        texte:
+          "Les sites de résultats de football sont encombrés. On y cherche une information simple — **mon équipe joue quand, et sur quelle chaîne** — et on la trouve au milieu de dix widgets et de trois bandeaux publicitaires.",
+      },
+      {
+        type: "para",
+        texte:
+          "MatchDay ne fait que ça. On choisit ses équipes favorites, et l'écran d'accueil devient leur calendrier : le prochain match, la date en toutes lettres, l'heure, et la chaîne qui le diffuse. Six compétitions sont couvertes — Ligue 1, Premier League, Liga, Bundesliga, Serie A et Ligue des champions.",
+      },
+
+      { type: "titre", texte: "Ce qu'il y a dedans" },
+      {
+        type: "grille",
+        items: [
+          {
+            titre: "Les favoris",
+            texte:
+              "On suit ses équipes, et l'application s'organise autour d'elles. Le choix est gardé sur l'appareil : aucun compte à créer pour s'en servir.",
+          },
+          {
+            titre: "La chaîne de diffusion",
+            texte:
+              "L'information que les autres oublient. Une table de correspondance par compétition indique où le match sera visible — c'est souvent la vraie raison pour laquelle on ouvre l'application.",
+          },
+          {
+            titre: "Classements et résultats",
+            texte:
+              "Le classement complet de chaque compétition, et les derniers résultats de chaque équipe suivie, avec le détail d'une rencontre.",
+          },
+          {
+            titre: "Installable et bilingue",
+            texte:
+              "Elle s'installe sur l'écran d'accueil d'un téléphone comme une vraie application, avec sa bannière d'installation et ses icônes générées. L'interface bascule entre deux langues.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Comment c'est construit" },
+      {
+        type: "para",
+        texte:
+          "Les données viennent d'une **API publique de football**, interrogée par quatre routes serveur : les matchs d'une équipe, ses résultats, le classement d'une compétition et la liste de ses équipes. Passer par le serveur plutôt que d'appeler l'API depuis le navigateur a deux raisons : la clé d'accès ne quitte jamais le serveur, et les réponses peuvent être mises en cache une seule fois pour tous les visiteurs plutôt qu'une fois par personne.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le reste est volontairement simple : pas de base de données, pas de compte. Les favoris vivent dans le stockage du navigateur. C'est ce qui permet à l'application d'être utile dès la première seconde, sans écran d'inscription.",
+      },
+
+      { type: "titre", texte: "Ce qui n'a pas été fait, et pourquoi" },
+      {
+        type: "para",
+        texte:
+          "J'avais étudié la suite : comptes utilisateurs pour retrouver ses favoris d'un appareil à l'autre, et un abonnement mensuel pour financer l'accès à l'API. Le calcul était fait, commission du prestataire de paiement comprise.",
+      },
+      {
+        type: "para",
+        texte:
+          "Je ne l'ai pas implémenté, et c'est un choix : faire payer suppose de garantir un service, donc de tenir une disponibilité et un support que je ne peux pas assurer sur un projet mené le week-end. L'application reste gratuite et sans compte. Cette réflexion m'aura surtout appris à chiffrer une idée **avant** de la coder — et parfois à s'arrêter là.",
+      },
+    ],
   },
   {
     slug: "circled-fight",
     nom: "Circled Fight",
-    resume: "Tournois, brackets et classements",
-    statut: "En ligne",
+    resume:
+      "Le premier jet : tournois, classements, paris et boutique, en HTML et JavaScript sans framework. C'est ce projet qui a rendu The Circle nécessaire — et qui m'a montré pourquoi.",
+    statut: "Archivé — le prédécesseur de The Circle",
     enLigne: true,
-    vedette: false,
+    vedette: true,
     urlLive: "https://p4lbl0.github.io/Circled-Fight/",
     liens: [{ label: "En ligne", url: "https://p4lbl0.github.io/Circled-Fight/" }],
+    sousTitre:
+      "Vingt-trois pages écrites à la main pour faire tourner les tournois d'une communauté — et la démonstration, par l'usage, de ce qu'il fallait construire ensuite.",
+    meta: [
+      "Projet personnel — **archivé**",
+      "Rôle : **conception et développement**",
+      "Le prédécesseur direct de **The Circle**",
+    ],
+    stack: ["HTML", "CSS", "JavaScript", "Firebase"],
+    chiffres: [
+      { valeur: "23", label: "pages écrites à la main" },
+      { valeur: "75", label: "commits" },
+    ],
+    contenu: [
+      { type: "titre", texte: "Ce que c'était" },
+      {
+        type: "para",
+        texte:
+          "Le site de ma communauté de jeu, avant The Circle. Tout y est passé au fil des saisons : les tournois et leurs arbres de rencontres, les classements, un tableau de bord pour le mode battle royale, un autre pour les mini-jeux, les scores 1 contre 1, une boutique, un système de paris entre membres avec son historique, la liste des membres, un espace d'administration, et même des pages saisonnières pour Halloween et Noël.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le tout en **HTML, CSS et JavaScript écrits à la main**, sans aucun framework, avec Firebase pour la connexion et les données. Vingt-trois pages, chacune complète et autonome.",
+      },
+
+      { type: "titre", texte: "Ce que ça m'a appris — en me faisant mal" },
+      {
+        type: "para",
+        texte:
+          "Ce projet est le meilleur professeur que j'aie eu, parce qu'il m'a fait rencontrer **tous** les problèmes que résolvent les outils que j'utilise aujourd'hui. Pas en lisant qu'ils existaient : en les subissant.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Vingt-trois pages, vingt-trois copies de l'en-tête.",
+            texte:
+              "Changer un lien de navigation voulait dire ouvrir vingt-trois fichiers. J'en ai toujours oublié un. C'est exactement le problème que résout un composant partagé — je l'ai compris parce que je l'avais vécu.",
+          },
+          {
+            fort: "Les données et l'affichage mélangés.",
+            texte:
+              "Les scores vivaient dans des fichiers de données édités à la main, saison par saison, à côté du code qui les affichait. Ajouter une saison voulait dire dupliquer un fichier. Il n'y avait aucune frontière entre ce que le jeu sait et ce que l'écran montre.",
+          },
+          {
+            fort: "Aucune règle côté serveur.",
+            texte:
+              "Les vérifications vivaient dans le navigateur, donc dans les mains de l'utilisateur. C'est cette page-là de mon apprentissage qui explique pourquoi, aujourd'hui, j'écris le cloisonnement dans la base plutôt que dans l'application.",
+          },
+          {
+            fort: "Rien n'était testable.",
+            texte:
+              "Pour vérifier qu'un classement était juste, il fallait ouvrir le site et regarder. Aucune logique n'était isolée de l'affichage — c'est devenu une règle d'architecture dans tous mes projets suivants.",
+          },
+        ],
+      },
+      {
+        type: "citation",
+        texte: "On ne comprend vraiment un outil qu'après avoir souffert de son absence.",
+      },
+
+      { type: "titre", texte: "La suite" },
+      {
+        type: "para",
+        texte:
+          "The Circle est né de ces limites, et point par point : des composants au lieu de pages copiées, une vraie base relationnelle au lieu de fichiers de données, des règles de sécurité écrites dans la base, et une logique séparée de l'affichage. Ce n'est pas une réécriture de plus — c'est la réponse à une liste de problèmes que j'avais tous rencontrés à la main.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le site est resté en ligne, et je n'en suis plus responsable : la communauté l'a repris. Je le garde ici parce qu'un portfolio qui ne montre que l'état final ne montre pas grand-chose du chemin.",
+      },
+    ],
   },
   {
     slug: "everest",
@@ -1691,20 +1916,453 @@ export const projets: Projet[] = [
   {
     slug: "le-protecteur",
     nom: "Le Protecteur",
-    resume: "Roguelike pixel-art, gestion de village",
-    statut: "En cours",
+    resume:
+      "Un roguelike de survie où l'IA ne perd jamais un héros — seul le joueur peut en tuer un. Sept classes, un village qui vit, et une défaite qui fabrique le boss de la partie suivante.",
+    statut: "En développement",
     enLigne: false,
-    vedette: false,
+    vedette: true,
     urlCode: "https://github.com/P4lbL0/jeux",
     liens: [{ label: "Code", url: "https://github.com/P4lbL0/jeux" }],
+    sousTitre:
+      "Un roguelike vu de dessus en pixel-art, où l'on protège un village qui vit sa propre vie — et où la mort est définitive.",
+    meta: [
+      "Projet personnel — **en développement**",
+      "Commencé en **août 2026**",
+      "Rôle : **conception et développement**",
+    ],
+    stack: ["TypeScript", "Phaser 3", "Vite", "Vitest", "Supabase", "Playwright"],
+    chiffres: [
+      { valeur: "27 358", label: "lignes de TypeScript" },
+      { valeur: "425", label: "cas de test" },
+      { valeur: "7", label: "classes jouables" },
+      { valeur: "36", label: "fiches de design" },
+    ],
+    contenu: [
+      { type: "titre", texte: "L'idée" },
+      {
+        type: "para",
+        texte:
+          "Dans un monde d'après la catastrophe, chaque village survit grâce à son **Protecteur**. Celui-ci n'en a plus — c'est devenu banal — et sans Protecteur, un village est condamné. Le joueur arrive dans les ruines, parle aux habitants, comprend la situation, et accepte le poste. Il est payé pour ça.",
+      },
+      {
+        type: "para",
+        texte:
+          "**Le jeu, c'est ce métier** : restaurer le village, organiser ses défenses, repousser les vagues, et faire grandir assez de héros pour tenir. Il n'y a pas de fin : les vagues s'enchaînent, les monstres montent en puissance, et le score c'est jusqu'où on est allé.",
+      },
+      {
+        type: "image",
+        src: "/images/protecteur-village.webp",
+        alt: "Le village vu de dessus, la mer à l'ouest, la palissade en construction au sud, et la barre des sept héros en haut de l'écran.",
+        legende:
+          "Le village au premier jour. La mer ferme l'ouest, la montagne le sud : les monstres ne peuvent venir que du nord et de l'est.",
+      },
+
+      { type: "titre", texte: "La règle des 20 %, et pourquoi tout tient dessus" },
+      {
+        type: "para",
+        texte:
+          "Le cœur du jeu tient en trois lignes, et c'est de leur combinaison que sort tout le reste :",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Un héros joué par l'IA se replie à 20 % de vie.",
+            texte: "Donc l'**IA ne perd jamais un héros**. Jamais.",
+          },
+          {
+            fort: "Le joueur change de héros quand il veut — sauf sous 20 % de vie.",
+            texte:
+              "Sous ce seuil il est verrouillé sur son héros et doit le ramener vivant jusqu'à la cité. Pas d'échappatoire.",
+          },
+          {
+            fort: "La mort est définitive.",
+            texte: "Et la sauvegarde s'écrase à la mort. Fermer l'onglet ne ramène personne.",
+          },
+        ],
+      },
+      {
+        type: "citation",
+        texte: "Un héros ne peut mourir que par une décision du joueur.",
+      },
+      {
+        type: "para",
+        texte:
+          "C'est la conséquence logique des trois règles, et c'est tout le sujet du jeu. On ne perd pas un personnage parce que l'ordinateur a mal joué, ni parce qu'un dé est tombé du mauvais côté : on le perd parce qu'on a voulu tenir trois secondes de plus. Aucune posture ne suspend ce repli — un héros en posture agressive qui tombe au seuil décroche quand même. C'est vérifié par un test, et ça doit le rester.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le joueur ne contrôle d'ailleurs que son déplacement et ses ultimes : **l'attaque, la visée et l'esquive sont automatiques**. La question posée n'est jamais « est-ce que je vise bien », c'est « où dois-je être, et qui dois-je envoyer ailleurs ».",
+      },
+
+      { type: "titre", texte: "Une journée" },
+      {
+        type: "para",
+        texte:
+          "Le temps est découpé en **30 minutes de jour et 15 de nuit**, réelles. Les deux moitiés ne se jouent pas du tout pareil.",
+      },
+      {
+        type: "grille",
+        items: [
+          {
+            titre: "Le jour — on construit",
+            texte:
+              "Les habitants travaillent et la récolte tombe seule ; le joueur récolte à la main, bien plus vite. On répare, on bâtit, on affecte les métiers, on accueille ou non ceux qui attendent à la porte. Mais une horde peut tomber en plein jour.",
+          },
+          {
+            titre: "La nuit — on tient",
+            texte:
+              "Un effectif décidé à l'avance arrive par les fronts ouverts. Les habitants rentrent, sauf ceux qu'on laisse dehors. Si l'effectif est épuisé avant l'aube, la nuit devient calme : c'est la récompense d'avoir nettoyé vite.",
+          },
+          {
+            titre: "L'aube — on compte",
+            texte:
+              "Versement de l'argent, et ce que la nuit a cassé reste cassé. Naissances, arrivées à la porte, survivants à aller chercher au bord de la carte.",
+          },
+          {
+            titre: "Et ça recommence",
+            texte:
+              "Toutes les durées et tous les effectifs vivent dans une seule table de réglages, en haut d'un seul fichier. C'est le seul endroit à toucher pour changer le rythme du jeu.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Commander sans mettre le jeu en pause" },
+      {
+        type: "para",
+        texte:
+          "Le combat ne s'arrête jamais pour donner un ordre. La règle de la souris tient en une phrase : **gauche c'est moi, droite c'est les autres**. Clic droit sur le sol, la sélection tient ce point ; sur un allié, elle le protège et le suit ; sur un portrait, on ajoute ou retire ce héros de la sélection.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Trois postures et trois formations.",
+            texte:
+              "Temporiser, agressif, repli — et formation libre, en mur ou en cercle. Sans sélection, l'ordre vaut pour toute l'équipe.",
+          },
+          {
+            fort: "Le héros incarné n'obéit jamais.",
+            texte: "C'est le joueur qui le pilote. Les ordres ne s'adressent qu'aux autres.",
+          },
+          {
+            fort: "Les morts-vivants obéissent au même système.",
+            texte:
+              "Les invocations du nécromancien reçoivent exactement les mêmes ordres que les héros. C'est un seul système, pas deux — une décision de conception qui évite de dupliquer toute la logique de commandement.",
+          },
+          {
+            fort: "Deux héros qui se battent côte à côte apprennent.",
+            texte:
+              "Une expérience de groupe par paire monte jusqu'à +10 % de dégâts, et elle est visible dans la fiche du héros. Garder les mêmes ensemble finit par payer.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Un village qu'on aménage, pas un menu de construction" },
+      {
+        type: "para",
+        texte:
+          "Une touche arrête le temps et fait apparaître la grille — **le jour seulement**, parce que l'ouvrir en pleine nuit serait une réparation gratuite au milieu d'un assaut. Le temps passé dedans est rendu à la fermeture.",
+      },
+      {
+        type: "para",
+        texte:
+          "On y pose des palissades, des tours de guet, des champs de blé. Déplacer une construction est **gratuit et instantané**, mais elle **garde ses points de vie** — sinon déplacer réparerait. Démolir rend la moitié de ce qui tenait encore debout. Deux règles de pose seulement, et elles sont locales : trois cases libres autour de l'église et du port, et un sol qui porte. Un refus dit toujours pourquoi.",
+      },
+      {
+        type: "para",
+        texte:
+          "Les tours méritent leur propre règle, et c'est peut-être ma décision de conception préférée : **une tour est une position, pas une arme**. Elle ne tire pas. Elle donne un point haut et met son occupant hors d'atteinte de la mêlée — c'est l'occupant qui décide de ce qui en sort. Un mage y lance ses sorts, un villageois n'y fait qu'alerter. Et elle a des points de vie : quand elle tombe, l'occupant tombe avec elle. Sans ça, y poster son meilleur héros serait la stratégie définitive du jeu.",
+      },
+
+      { type: "titre", texte: "La porte : décider qui entre" },
+      {
+        type: "para",
+        texte:
+          "Un inconnu se présente tous les deux ou trois jours — plus souvent si le village a bonne réputation, plus du tout s'il se meurt. Le jeu se met en pause et sa fiche s'ouvre. Ce n'est pas une interface de plus : c'est **la fiche de personnage habituelle, dans un troisième mode**.",
+      },
+      {
+        type: "image",
+        src: "/images/protecteur-porte.webp",
+        alt: "L'écran d'observation d'un inconnu à la porte : statistiques, traits visibles, trois lignes d'observation, quatre questions, et deux boutons — ouvrir la porte ou le renvoyer.",
+        legende:
+          "Trois observations, quatre questions, et une décision. Celui-ci s'est présenté seul en pleine nuit, ne dit pas d'où il vient, et se contredit.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Trois lignes d'observation, toujours trois.",
+            texte:
+              "Chaque axe a deux versions, une alarmante et une rassurante. Un innocent en montre zéro ou une d'alarmante ; un fou, deux ou trois.",
+          },
+          {
+            fort: "Quatre questions, tirées d'une banque de vingt.",
+            texte:
+              "Et surtout : **la réponse n'est jamais tirée au sort**. Elle découle de ce que la personne est. Le même homme, à la même question, répond toujours pareil — sinon il n'y aurait rien à déduire, juste à espérer.",
+          },
+          {
+            fort: "Trois degrés de folie.",
+            texte:
+              "Le voleur vide les stocks et disparaît. Le saboteur ouvre une brèche. Le meurtrier tue dans la nuit. Les deux derniers ne sont **jamais démasqués** — et si on en a laissé entrer trois, ils frappent la même nuit.",
+          },
+          {
+            fort: "Refuser ne coûte rien.",
+            texte:
+              "Aucun malus : juste le bras qu'on n'aura pas. Le village manque de monde, et c'est ça, la vraie pression.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Le port : un marché qui répond à ce qu'on lui fait" },
+      {
+        type: "para",
+        texte:
+          "Le port est debout en ruine dès la première minute, sur la plage. On le relève pour 80 bois et une demi-journée. Adossé au flanc fermé, **rien ne peut jamais l'atteindre**.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Le navire n'a pas d'horaire.",
+            texte:
+              "Une voile paraît environ une journée calme sur trois — et calme veut dire : il fait jour, plus un monstre debout, personne n'est mort récemment. Une mauvaise nuit coupe donc le commerce en même temps que les arrivées.",
+          },
+          {
+            fort: "Vendre fait baisser le cours de ce qu'on vend.",
+            texte:
+              "Et il remonte les jours suivants. C'est ce qui remplace un plafond de cargaison : solder tout un stock d'un coup rapporte de moins en moins cher sur la fin. Le joueur décide quoi charger, pas combien il a le droit de charger.",
+          },
+          {
+            fort: "On peut vendre son blé.",
+            texte:
+              "Donc s'affamer soi-même. Le panneau affiche les journées de vivres restantes, qui baissent pendant qu'on charge. Le jeu ne l'interdit pas — il le montre.",
+          },
+          {
+            fort: "L'argent ne se convertit qu'une fois.",
+            texte:
+              "Il vient du port, et il part dans les niveaux d'église. C'est la seule conversion du jeu, et elle est à sens unique.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Des gens, pas des unités" },
+      {
+        type: "para",
+        texte:
+          "Héros et habitants partagent **un seul système** : trois statistiques en pourcentage, des traits, une jauge de stress et des états qui tuent en cinq à sept journées si on ne les soigne pas. Une seule fiche pour les deux populations, avec le nom modifiable.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Un trait vaut peu, et se mérite.",
+            texte:
+              "2 à 5 %, un seuil décalé. Ils se gagnent par **exploit**, jamais par tirage : tuer deux cents monstres, voir mourir trois habitants, passer dix nuits dehors. Ce que le personnage a vécu est écrit dessus.",
+          },
+          {
+            fort: "Une séquelle est énorme et définitive.",
+            texte:
+              "Et elle ne s'obtient qu'en survivant au stade mourant. Soigner quelqu'un in extremis le sauve **et** l'abîme.",
+          },
+          {
+            fort: "Le stress ne fait rien — jusqu'à la rupture.",
+            texte:
+              "À 100 % il craque : paranoïa, terreur, rage, abattement, ou rarement il se transcende. À 200 % le cœur lâche. Un civil qui craque ne frappe jamais personne ; au pire il lâche son poste.",
+          },
+          {
+            fort: "Et tout ça remonte au village.",
+            texte:
+              "La satisfaction générale tombe de ces malheurs, et c'est elle qui débloque les niveaux d'église. La boucle se referme : mal traiter ses gens ferme la progression.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Sept classes, et une façon de les obtenir" },
+      {
+        type: "image",
+        src: "/images/protecteur-classes.webp",
+        alt: "La barre de héros affichant les sept classes : guerrier, chevalier, mage, assassin, rôdeur, oracle et nécromancien.",
+        legende:
+          "Guerrier, chevalier sacré, mage, assassin, rôdeur, oracle, nécromancien. Deux héros de la même classe ne se ressemblent pas : ni le même rang, ni les mêmes compétences.",
+      },
+      {
+        type: "para",
+        texte:
+          "Une décision prise en cours de route a annulé une règle défendue depuis le début du projet : **on ne recrute pas de héros**. Le joueur commence seul, avec sa classe, et tous les autres héros **sortent du village** — par les naissances, par l'apprentissage, par les gens qu'on laisse entrer à la porte ou qu'on ramène du bord de la carte.",
+      },
+      {
+        type: "para",
+        texte:
+          "Ce qui change tout : un héros a donc toujours eu un nom d'habitant et un métier avant d'en être un. Celui qu'on perd la nuit, on l'a nourri, logé et vu grandir le jour.",
+      },
+
+      { type: "titre", texte: "Perdre fabrique la partie suivante" },
+      {
+        type: "para",
+        texte:
+          "C'est le système dont je suis le plus content, et il tient en cinq points. Quand on perd : le village tombe ; le héros de départ **s'en sort** ; il perd un morceau de son pouvoir dans sa fuite ; il gagne un degré de corruption ; et il part vers un autre village — **c'est la partie suivante**.",
+      },
+      {
+        type: "para",
+        texte:
+          "Au bout de plusieurs défaites, la corruption l'emporte et il bascule. Le joueur repart avec un nouveau héros, et **l'ancien revient comme antagoniste**, à la tête de ce qui vient détruire le village qu'on protège.",
+      },
+      {
+        type: "liste",
+        items: [
+          {
+            fort: "Ça explique le monde.",
+            texte:
+              "Si tous les Protecteurs qui échouent finissent ainsi, on comprend d'un coup pourquoi tant de villages n'ont plus de Protecteur, et d'où viennent les monstres. Le décor devient la conséquence de la boucle de jeu.",
+          },
+          {
+            fort: "Le boss est personnel.",
+            texte:
+              "Ce n'est pas un méchant écrit à l'avance : c'est votre propre personnage, avec votre classe, vos compétences et vos choix. Chaque joueur affronte le sien.",
+          },
+          {
+            fort: "La défaite construit au lieu d'effacer.",
+            texte:
+              "Perdre ne remet pas les compteurs à zéro : ça fabrique le contenu de la suite. Il est rare qu'un système de recommencement raconte quelque chose.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Comment c'est fait" },
+      {
+        type: "para",
+        texte:
+          "Une règle d'architecture commande tout le reste : **le dossier de logique ne connaît pas Phaser**. Terrain, cycle, IA, ordres, habitants, stress, commerce, sauvegarde — tout cela est écrit en fonctions pures, sans moteur de jeu. C'est ce qui permet de tester les règles sans lancer le jeu, et de changer d'affichage un jour sans réécrire les règles.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le résultat concret : **425 cas de test** répartis sur 19 fichiers, qui couvrent la logique et non l'affichage. L'aléatoire est semé, donc une même graine rejoue exactement la même partie. Le réseau, lui, est confiné dans un seul dossier — retirable en entier : le jeu se lance sans compte, sans connexion, et sauvegarde en local sur trois emplacements.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le design se décide avant de coder, dans **36 fiches** numérotées, et le code renvoie vers elles. Quand une décision change, elle change là d'abord — y compris quand elle en annule une plus ancienne, et c'est écrit noir sur blanc dans la fiche concernée.",
+      },
+
+      { type: "titre", texte: "Où ça en est" },
+      {
+        type: "para",
+        texte:
+          "Les quatre premiers jalons sont faits : l'arène, l'équipe, l'attaque automatique, l'IA, la règle des 20 %, la cité où l'on se soigne, la mort définitive, la boucle expérience → niveau → choix, puis les ordres, les formations et l'expérience de groupe.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le cinquième — **le village vivant** — est en cours, découpé en douze blocs dont neuf sont livrés : la carte et les fronts, le cycle jour/nuit, la grille modifiable, l'église, les traits et le stress, la porte, le port. Restent les survivants qu'on va chercher au bord de la carte, et la transformation d'un villageois en héros. C'est un projet que je mène pour le plaisir de la conception, et il avance quand j'ai le temps.",
+      },
+    ],
   },
   {
     slug: "ocr-resultat",
-    nom: "ocr-resultat",
-    resume: "Lecture de scoreboards par OCR, en équipe",
-    statut: "Projet collaboratif",
+    nom: "Lecture de scoreboards",
+    resume:
+      "Un service qui lit une capture d'écran de fin de partie et en sort du JSON validé. Mon seul projet à deux — et celui où j'ai appris qu'un contrat d'API se fige avant d'écrire la première ligne.",
+    statut: "Projet à deux",
     enLigne: false,
-    vedette: false,
+    vedette: true,
+    urlCode: "https://github.com/june0809/ocr-resultat",
+    liens: [{ label: "Code", url: "https://github.com/june0809/ocr-resultat" }],
+    sousTitre:
+      "Transformer la photo d'un tableau des scores en données de match — sans jamais toucher à la base de celui qui les consomme.",
+    meta: [
+      "Projet personnel — **à deux**",
+      "Été **2026**",
+      "Rôle : **architecture, contrat d'API, moteur de lecture**",
+    ],
+    stack: ["Next.js", "TypeScript", "Zod", "Tesseract", "Vercel"],
+    contenu: [
+      { type: "titre", texte: "Le problème" },
+      {
+        type: "para",
+        texte:
+          "The Circle saisit ses scores de tournoi **à la main**. À la fin d'une partie, un organisateur recopie une vingtaine de lignes depuis une capture d'écran de téléphone. C'est long, et on se trompe.",
+      },
+      {
+        type: "para",
+        texte:
+          "L'idée : envoyer la capture, récupérer du JSON. Mais dès le départ, une contrainte a orienté toute la conception — ce service devait être **vendable seul**. N'importe quel clan ou organisation esport a exactement le même problème.",
+      },
+
+      { type: "titre", texte: "La décision qui structure tout : la frontière" },
+      {
+        type: "para",
+        texte:
+          "Une règle, non négociable, écrite avant la première ligne de code : **le service ne touche jamais à la base de The Circle**. Il expose une API, il renvoie du JSON. S'il plante, tombe, ou sort une bêtise, The Circle continue de tourner exactement comme avant.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le piège classique de ce genre de duo, c'est le développeur du service qui demande « juste un accès à la base pour tester ». La réponse est non, et le cahier des charges le dit noir sur blanc. Tout se teste avec des réponses bouchonnées.",
+      },
+      {
+        type: "para",
+        texte:
+          "Le point de bascule est **le pseudo**. Un tableau des scores n'affiche que des pseudos en jeu : le service les lit et s'arrête là. La correspondance pseudo → compte se fait **uniquement du côté de The Circle**, la seule à connaître ses membres. Le service ne reçoit jamais d'identifiant de compte, n'en devine aucun, et ne corrige jamais un pseudo.",
+      },
+      {
+        type: "citation",
+        texte: "Le contrat d'API est figé dès le départ pour que la question ne se pose jamais.",
+      },
+
+      { type: "titre", texte: "Ce que ça donne, concrètement" },
+      {
+        type: "grille",
+        items: [
+          {
+            titre: "Sans état, sans base",
+            texte:
+              "Le service ne stocke ni les captures ni les résultats. Il valide et il répond. Seules les clés d'API existent — et sous forme hachée, dans une variable d'environnement.",
+          },
+          {
+            titre: "Un format de sortie neutre",
+            texte:
+              "Équipes, classement, pseudo, éliminations, morts, assistances — et un indice de confiance par joueur. Rien qui trahisse le client à qui il est destiné.",
+          },
+          {
+            titre: "Des erreurs uniformes",
+            texte:
+              "Corps invalide, clé refusée, tableau illisible, trop d'appels, panne : cinq codes, un seul format. Le client sait toujours quoi faire de la réponse.",
+          },
+          {
+            titre: "Un premier lot qui ne lit rien",
+            texte:
+              "Le lot 1 ne fait aucune lecture d'image : il valide un JSON déjà extrait. C'est volontaire — il sert à verrouiller la frontière avant que le sujet difficile n'arrive.",
+          },
+        ],
+      },
+
+      { type: "titre", texte: "Ma part du travail" },
+      {
+        type: "para",
+        texte:
+          "Nous sommes deux sur ce dépôt, et je préfère être précis sur qui a fait quoi. J'ai écrit le **cahier des charges** — la frontière, le contrat de sortie, les jalons — puis sa deuxième version quand on a décidé de piloter la lecture depuis le serveur. J'ai aussi fourni de vraies captures de parties avec leur transcription, pour qu'on puisse mesurer la justesse au lieu de l'estimer.",
+      },
+      {
+        type: "para",
+        texte:
+          "Côté code, mes contributions portent sur le moteur de lecture : la **détection des colonnes par ancrage sur l'en-tête** — c'est ce qui a fait passer les éliminations, morts et assistances à 100 % de justesse sur tablette **comme** sur téléphone, alors qu'une grille figée ne marchait que sur un format d'écran ; la fusion des deux moteurs, navigateur et serveur, en un seul paquet consommable ; un gain de performance en ne reconfigurant le moteur qu'une fois par colonne au lieu d'une fois par cellule ; et la lecture du score de manches, qui permet d'en déduire le vainqueur sans le demander.",
+      },
+
+      { type: "titre", texte: "Ce que j'en retiens" },
+      {
+        type: "para",
+        texte:
+          "Travailler à deux sur des dépôts séparés oblige à une discipline que je n'avais pas quand je codais seul : **le contrat passe avant le code**. Tant qu'on ne sait pas exactement ce qui traverse la frontière, on ne peut pas travailler en parallèle sans se marcher dessus.",
+      },
+      {
+        type: "para",
+        texte:
+          "Et une limite assumée, documentée dans le dépôt plutôt que cachée : le limiteur d'appels du premier lot compte **en mémoire, par instance**. Sur un hébergement sans état, c'est approximatif. La signature de la fonction a été écrite pour qu'on puisse brancher un vrai compteur partagé sans rien changer ailleurs — mais tant que ce n'est pas fait, c'est écrit dans le fichier et dans le README.",
+      },
+    ],
   },
 ];
 

@@ -90,6 +90,35 @@ Les champs propres à un chantier :
 Tant que `photo` est une chaîne vide, la couverture affiche un emplacement
 réservé au lieu d'une image cassée.
 
+### Mettre une vidéo sur une fiche projet
+
+1. Déposer le `.mp4` dans `public/videos/` (16:9, une taille raisonnable — le
+   film d'A.M.C Bank fait 5,4 Mo pour 55 s en 1080p).
+2. En extraire une image d'attente, et la ranger dans `public/images/` :
+
+   ```bash
+   ffmpeg -ss 8 -i public/videos/mon-film.mp4 -frames:v 1 \
+     -vf scale=1280:-1 public/images/mon-film-affiche.webp
+   ```
+
+   Choisir une seconde qui montre quelque chose : c'est la seule image que la
+   plupart des visiteurs verront.
+3. Ajouter le champ `video` au projet, dans `lib/content.ts` :
+
+   ```ts
+   video: {
+     src: "/videos/mon-film.mp4",
+     affiche: "/images/mon-film-affiche.webp",
+     legende: "Ce que montre le film.",
+     duree: "55 s",
+   },
+   ```
+
+Le lecteur se place tout seul en tête de fiche, sous la bande de chiffres. Il
+est en `preload="none"` : **rien n'est téléchargé tant que le visiteur ne clique
+pas**, seule l'affiche est chargée. C'est ce qui permet d'avoir un film lourd
+sur une fiche sans le faire payer à ceux qui ne le regardent pas.
+
 ### Les types de blocs disponibles
 
 | Type       | À quoi ça sert                                                    |
@@ -136,6 +165,7 @@ components/
   Bande.tsx                   la bande corail de chiffres
   Blocs.tsx                   le rendu des blocs de contenu
   SommaireProjets.tsx         la grille de chantiers en tête de fiche
+  Video.tsx                   le lecteur du film d'un projet
   Pied.tsx                    le pied de page
   ThemeToggle.tsx             la bascule clair / sombre
 lib/

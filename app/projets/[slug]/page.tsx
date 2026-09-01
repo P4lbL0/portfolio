@@ -5,6 +5,7 @@ import Actions from "@/components/Actions";
 import Bande from "@/components/Bande";
 import Blocs from "@/components/Blocs";
 import Pied from "@/components/Pied";
+import Video from "@/components/Video";
 import { riche } from "@/lib/riche";
 import { domaine, getProjet, projetsVedettes } from "@/lib/content";
 
@@ -74,6 +75,8 @@ export default async function FicheProjet({ params }: Params) {
       </header>
 
       {projet.chiffres ? <Bande chiffres={projet.chiffres} /> : null}
+
+      {projet.video ? <Video video={projet.video} /> : null}
 
       <div className="wrap">
         <section className="sec">

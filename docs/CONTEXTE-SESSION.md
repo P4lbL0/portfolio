@@ -151,13 +151,43 @@ n'a été inventé : chaque chiffre est celui du rapport, y compris ceux de son
 annexe A (volumes traités). Le mécanisme pour en ajouter un est documenté dans
 le `README.md`.
 
-Les cinq fiches de projet personnel, elles, restent perfectibles. Ce qui manque
-le plus :
+**Fait le 1er septembre 2026, pour les projets personnels.** Quatre projets qui
+n'étaient qu'une ligne ont maintenant leur fiche, et les deux plus minces ont
+été étoffées :
 
-1. **Des visuels.** Chaque fiche a un bloc `reserve` en attente. Il faut soit
-   des captures fournies par Angelos, soit des captures prises en visitant ses
-   sites en ligne. Une image par fiche changerait beaucoup. **Lui demander avant
-   de prendre les captures soi-même.**
+- **Le Protecteur** — la plus grosse fiche du site. Écrite depuis le `README.md`
+  et les 36 fiches de `design/` du dépôt `Desktop\Projet\jeux` : la règle des
+  20 %, le cycle jour/nuit, les ordres, l'aménagement, la porte, le port, le
+  stress, et le système de défaite qui fabrique l'antagoniste de la partie
+  suivante. Deux captures du jeu, prises dans `jeux/captures/`.
+- **Lecture de scoreboards** (ex-`ocr-resultat`) — l'angle est la *frontière* :
+  le service ne touche jamais la base de The Circle. Sa part du travail y est
+  dite honnêtement (19 commits du binôme, 10 de lui).
+- **MatchDay** et **Circled Fight** — ce dernier raconté comme le prédécesseur
+  de The Circle, avec ce que ses limites lui ont appris.
+- **Pick Sell** et **No-Code IGA** ont reçu leurs sections techniques manquantes.
+
+**Everest reste volontairement une simple ligne** : 3 commits et 6 fichiers, une
+fiche se verrait vide. Ne pas lui en faire une sans nouvelle matière.
+
+**Attention — Pick Sell.** Son `CONTEXTE_PROJET.md` liste des failles connues
+(dont un back-office sans authentification). Ces informations **ne doivent pas
+finir sur le portfolio** : c'est un site en ligne. La fiche parle de ce qui
+marche et de l'architecture, jamais des trous.
+
+**La fiche No-Code IGA reste la plus mince du site**, faute de matière
+vérifiable : le dossier `Desktop\Projet\iam_plateforme` est vide, et
+`Desktop\SAE-IAM` ne contient qu'un squelette Flask et les environnements
+Docker. Tout ce qui a été ajouté est vérifiable sur le disque. Pour aller plus
+loin, **lui demander** — ne rien inventer.
+
+Ce qui manque encore :
+
+1. **Des visuels.** Le Protecteur a ses deux captures et A.M.C Bank son film.
+   Les autres fiches ont encore un bloc `reserve` en attente : The Circle, Kynn,
+   Pick Sell. **Lui demander avant de prendre les captures soi-même** — il a dit
+   vouloir tourner une vidéo pour chaque projet, donc ne pas se précipiter sur
+   des captures qu'un film remplacera.
 2. **Sa photo.** `profil.photo` est une chaîne vide, ce qui affiche un
    emplacement réservé. Dès qu'il fournit le fichier : le déposer dans
    `public/`, renseigner `profil.photo: "/nom.jpg"`.
@@ -269,8 +299,8 @@ Ce qui reste à faire :
 
 ```bash
 cd C:\Users\lemir\Desktop\Projet\portfolio
-npm run build            # types + génération statique, 19 pages depuis le 01/09
-npx next start -p 3260   # puis ouvrir http://localhost:3260
+npm run build            # types + génération statique, 23 pages depuis le 01/09
+npx next start -p 3261   # puis ouvrir http://localhost:3261
 ```
 
 Contrôles utiles avant de committer :
