@@ -156,9 +156,10 @@ SQL**, **11 projets personnels**, **9 projets en stage**.
 lesquels il a travaillé, personnels (`Desktop\Projet`, plus `la-grece` en
 distant) comme professionnels (`Desktop\STAGE`, `Desktop\SAE-IAM`). Une partie
 de ces commits est signée de collègues — Raphael Bensamoun et Vincent Couturier.
-Il a été averti et a choisi de les inclure. C'est pour cette raison que le
-libellé dit « commits **sur les projets où j'ai travaillé** » et non « commits
-poussés ». **Ne pas « corriger » ce chiffre ni ce libellé sans le lui demander.**
+Il a été averti à deux reprises et a choisi de les inclure, sous le libellé
+« **commits poussés** » qu'il a lui-même redemandé. **Ne pas « corriger » ce
+chiffre ni ce libellé sans le lui demander** : le voir signé d'autres auteurs
+n'est pas une erreur, c'est sa décision.
 
 Répartition : 1 173 commits personnels + 837 en stage et SAÉ ; 310 migrations
 personnelles + 466 en stage. Pour recalculer, depuis `Desktop` :

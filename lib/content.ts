@@ -48,11 +48,11 @@ export const profil = {
   // La bande colorée sous la couverture : le bilan de TOUT le travail, pas
   // celui d'un projet en particulier (les chiffres du stage sont sur sa fiche).
   //
-  // Périmètre retenu, décidé le 01/09/2026 : TOUS les dépôts sur lesquels
-  // Angelos a travaillé, personnels comme professionnels — d'où le libellé
-  // « sur les projets où j'ai travaillé » et non « commits poussés ». Une
-  // partie de ces commits est signée de collègues ; le compte les inclut
-  // volontairement. Ne pas « corriger » ce chiffre sans lui demander.
+  // Périmètre retenu, décidé par Angelos le 01/09/2026 : TOUS les dépôts sur
+  // lesquels il a travaillé, personnels comme professionnels. Une partie de
+  // ces commits est signée de collègues ; il en a été informé et a choisi de
+  // les inclure, sous le libellé « commits poussés ».
+  // NE PAS « corriger » ce chiffre ni ce libellé sans le lui demander.
   //
   //   commits    : 1 173 personnels + 837 en stage et SAÉ
   //   migrations : 310 personnelles + 466 en stage
@@ -63,7 +63,7 @@ export const profil = {
   // Doublons à exclure : « ES-CRM - Copie », « ES-CRM - Copie (2) », « alumnaiOG ».
   // Dernier relevé : 1er septembre 2026.
   chiffres: [
-    { valeur: "2 010", label: "commits sur les projets où j'ai travaillé" },
+    { valeur: "2 010", label: "commits poussés" },
     { valeur: "776", label: "migrations SQL" },
     { valeur: "11", label: "projets personnels" },
     { valeur: "9", label: "projets en stage" },
