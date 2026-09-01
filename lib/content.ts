@@ -45,12 +45,18 @@ export const profil = {
     { texte: "IUT de Créteil-Vitry — **UPEC**" },
   ],
 
-  // La bande colorée sous la couverture.
+  // La bande colorée sous la couverture : le bilan de TOUT le travail, pas
+  // celui d'un projet en particulier (les chiffres du stage sont sur sa fiche).
+  //
+  // Comment les remettre à jour, depuis Desktop/Projet :
+  //   commits    → git -C <dépôt> log --format='%an' | grep -ci p4lbl0, sur chaque dépôt
+  //   migrations → find <dépôt> -name '*.sql' | grep -i migration | wc -l
+  // Dernier relevé : 1er septembre 2026.
   chiffres: [
-    { valeur: "16 000", label: "dossiers migrés" },
-    { valeur: "103 Go", label: "de pièces reprises" },
-    { valeur: "~200", label: "utilisateurs en prod" },
-    { valeur: "0", label: "coupure de service" },
+    { valeur: "1 152", label: "commits poussés" },
+    { valeur: "310", label: "migrations SQL" },
+    { valeur: "11", label: "projets menés" },
+    { valeur: "7", label: "en ligne aujourd'hui" },
   ] satisfies Fait[],
 
   presentation: [

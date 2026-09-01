@@ -202,7 +202,9 @@ img {
   margin: 0;
   font-family: var(--f-disp), Impact, sans-serif;
   font-weight: 400;
-  font-size: clamp(52px, 13vw, 148px);
+  /* 23vw : sur un telephone le nom doit occuper toute la largeur, comme sur
+     une affiche. En dessous de 52px il avait l'air timide. */
+  font-size: clamp(58px, 23vw, 148px);
   line-height: 0.85;
   letter-spacing: -0.015em;
   text-transform: uppercase;
@@ -278,7 +280,10 @@ img {
   display: flex;
   flex-wrap: wrap;
 }
-.band div {
+/* `> div` et pas `div` : .wrap est lui-meme un div, et `.band div` (0,1,1)
+   battait `.wrap` (0,1,0) — le conteneur perdait ses marges laterales et les
+   chiffres se collaient au bord de l'ecran. */
+.band .wrap > div {
   flex: 1 1 148px;
   padding: 20px 26px 20px 0;
 }
@@ -715,7 +720,7 @@ img {
   margin: 0;
   font-family: var(--f-disp), Impact, sans-serif;
   font-weight: 400;
-  font-size: clamp(42px, 9vw, 100px);
+  font-size: clamp(42px, 13vw, 100px);
   line-height: 0.86;
   text-transform: uppercase;
   letter-spacing: -0.018em;
@@ -757,7 +762,17 @@ img {
   }
   .portrait,
   .portrait-vide {
-    width: 148px;
+    width: 132px;
+  }
+  /* En colonne : sur 390px de large, deux coordonnees cote a cote se
+     chevauchaient et la troisieme partait seule a la ligne. */
+  .byline {
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 26px;
+  }
+  .chapo {
+    margin-top: 24px;
   }
   .years .yr {
     grid-template-columns: 1fr;
@@ -791,7 +806,7 @@ img {
     border-width: 2px;
   }
   /* Deux colonnes pleines plutôt que trois puis un orphelin. */
-  .band div {
+  .band .wrap > div {
     flex: 1 1 40%;
     padding: 15px 18px 15px 0;
   }
