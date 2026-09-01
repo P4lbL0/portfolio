@@ -8,9 +8,8 @@ déjà tranchées.
 
 > Je veux continuer le travail sur mon portfolio, dans
 > `C:\Users\lemir\Desktop\Projet\portfolio`. Lis d'abord
-> `docs/CONTEXTE-SESSION.md` : tout y est. Deux chantiers, dans cet ordre :
-> enrichir les fiches de projet avec de vraies données tirées de mes dépôts,
-> puis reprendre le responsive à fond.
+> `docs/CONTEXTE-SESSION.md` : tout y est. Il reste les visuels des fiches
+> (mes captures et ma photo), puis le responsive à finir.
 
 ---
 
@@ -111,15 +110,49 @@ Il a explicitement **interdit** :
 - tout **nom** — produits de l'entreprise, clients, personnes (tuteurs compris) ;
 - toute **mention d'argent** — montants, primes, chiffre d'affaires.
 
-Le secteur d'activité a été retiré par précaution. Si la fiche est enrichie,
-garder cette règle. En cas de doute sur un élément, **demander**.
+**Mise à jour du 1er septembre 2026.** Angelos a tranché deux points restés
+ouverts, en connaissance de cause :
+
+- le **secteur est publiable** : rénovation énergétique et dispositif des
+  Certificats d'Économie d'Énergie. Sans lui, impossible d'expliquer les fiches
+  standardisées, l'éligibilité ou les calculs normés — la moitié du détail
+  technique tombait ;
+- les **produits internes ne sont jamais nommés**. On les désigne par ce qu'ils
+  font : « le CRM d'audit », « le CRM commercial », « l'entrepôt de données
+  foncières ». Si l'entreprise donne un jour son accord, il suffira de changer
+  les `titre` dans `projetsStage`.
+
+Le reste de la règle est inchangé : ni client, ni personne, ni montant. En cas
+de doute sur un élément, **demander**.
 
 ---
 
 ## 6. Chantier n°1 — enrichir les fiches
 
-Les cinq fiches de projet ont été écrites à partir des dépôts réels, mais
-restent perfectibles. Ce qui manque le plus :
+**Fait le 1er septembre 2026, pour la fiche de stage.** Elle ne parlait que du
+volet migration des deux CRM et expédiait tout le reste en un paragraphe. Elle
+couvre désormais **les neuf chantiers du stage**, chacun sur sa propre page,
+avec un sommaire en grille à l'entrée de la fiche :
+
+| # | Chantier | Adresse |
+| --- | --- | --- |
+| 01 | La reprise de l'historique | `/experiences/airbay-data/reprise-historique` |
+| 02 | La passerelle entre deux CRM | `…/passerelle-crm` |
+| 03 | Le moteur de recherche de profils | `…/recherche-profils` |
+| 04 | Du prototype à la plateforme | `…/prototype-plateforme` |
+| 05 | Des appels aux données | `…/appels-donnees` |
+| 06 | Le bot de facturation | `…/bot-facturation` |
+| 07 | Le bot de notes de frais | `…/bot-notes-de-frais` |
+| 08 | Le CRM commercial | `…/crm-commercial` |
+| 09 | L'entrepôt de données foncières | `…/donnees-foncieres` |
+
+Toute la matière vient du rapport de stage, filtrée selon la section 5. Rien
+n'a été inventé : chaque chiffre est celui du rapport, y compris ceux de son
+annexe A (volumes traités). Le mécanisme pour en ajouter un est documenté dans
+le `README.md`.
+
+Les cinq fiches de projet personnel, elles, restent perfectibles. Ce qui manque
+le plus :
 
 1. **Des visuels.** Chaque fiche a un bloc `reserve` en attente. Il faut soit
    des captures fournies par Angelos, soit des captures prises en visitant ses
@@ -215,7 +248,17 @@ Ce qui reste à faire :
   le dossier courant, souvent `the_circle`), puis les déplacer dans
   `portfolio/docs/screens/`.
 - **`npx next start` garde le port occupé** entre deux essais : changer de port
-  ou arrêter la tâche de fond avant de relancer.
+  ou arrêter la tâche de fond avant de relancer. Mesuré le 01/09 : **neuf**
+  serveurs zombies occupaient 3210 à 3218, et l'un d'eux servait un ancien
+  build — d'où des 404 sur des pages qui existaient pourtant. Vérifier le port
+  libre avant de conclure quoi que ce soit :
+  `netstat -ano | grep LISTENING | grep -oE ':32[0-9]{2}' | sort -u`.
+- **Le navigateur de Chrome DevTools MCP se verrouille** s'il tourne déjà
+  ailleurs (« browser is already running »). Contournement utilisé : un script
+  Puppeteer avec son propre `userDataDir`, en important `puppeteer-core` par
+  chemin absolu depuis `the_circle/node_modules` — le portfolio ne l'a pas.
+- **`npm run lint` est cassé** : `next lint` a disparu de Next 16. Le contrôle
+  qui compte reste `npm run build`, qui fait le typecheck.
 - **Vérifier le rendu par mesure, pas à l'œil.** Une capture compressée fait
   lire des choses fausses. `evaluate_script` avec `getBoundingClientRect()` et
   `scrollWidth - clientWidth` donne la réponse en une fois.
@@ -226,8 +269,8 @@ Ce qui reste à faire :
 
 ```bash
 cd C:\Users\lemir\Desktop\Projet\portfolio
-npm run build            # types + génération statique, doit rester à 10 pages
-npx next start -p 3210   # puis ouvrir http://localhost:3210
+npm run build            # types + génération statique, 19 pages depuis le 01/09
+npx next start -p 3260   # puis ouvrir http://localhost:3260
 ```
 
 Contrôles utiles avant de committer :

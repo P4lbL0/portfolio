@@ -960,3 +960,156 @@ section[id] {
     gap: 0;
   }
 }
+
+/* ---------------------------- sommaire des chantiers ----------------------------
+   La grille de cartes en tête d'une fiche d'expérience : une carte par chantier,
+   chacune menant à sa propre page.
+   Piège déjà payé ici : ne jamais viser un nom d'élément générique
+   (« .sommaire div ») — .wrap est lui-même un div et perdrait ses marges. */
+.sommaire {
+  padding-top: 62px;
+}
+.sommaire-chapeau {
+  margin: 0 0 30px;
+  max-width: 62ch;
+  font-family: var(--f-read), Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+.sommaire-grille {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.chantier {
+  display: block;
+  padding: 24px 26px 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.18s, transform 0.18s;
+}
+.chantier:hover {
+  border-color: var(--acc);
+  transform: translateY(-2px);
+}
+.chantier-n {
+  display: block;
+  font-family: var(--f-disp), Impact, sans-serif;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--acc);
+  font-variant-numeric: tabular-nums;
+}
+.chantier-n.grand {
+  margin-bottom: 10px;
+  font-size: clamp(40px, 9vw, 64px);
+}
+.chantier-tag {
+  display: block;
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.chantier h3 {
+  margin: 6px 0 0;
+  font-family: var(--f-disp), Impact, sans-serif;
+  font-weight: 400;
+  font-size: 27px;
+  line-height: 1.04;
+  text-transform: uppercase;
+  letter-spacing: -0.012em;
+}
+.chantier:hover h3 {
+  color: var(--acc);
+}
+.chantier-cle {
+  display: block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--acc);
+}
+.chantier p {
+  margin: 12px 0 0;
+  font-family: var(--f-read), Georgia, serif;
+  font-size: 16px;
+  line-height: 1.58;
+  color: var(--ink2);
+}
+.chantier-go {
+  display: block;
+  margin-top: 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mut);
+  transition: color 0.18s;
+}
+.chantier:hover .chantier-go {
+  color: var(--acc);
+}
+
+/* ---------------------------- chantier précédent / suivant ---------------------------- */
+.voisins {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 8px 0 20px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+.voisins a {
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.18s;
+}
+.voisins a:hover {
+  border-color: var(--acc);
+}
+.voisins a.droite {
+  text-align: right;
+}
+.voisins span {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.voisins b {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--f-disp), Impact, sans-serif;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.voisins a:hover b {
+  color: var(--acc);
+}
+
+/* Une colonne dès que deux colonnes serreraient trop le texte courant.
+   La borne est haute (900px) parce qu'un résumé en serif a besoin de largeur :
+   c'est la zone tablette qui souffrait le plus. */
+@media (max-width: 900px) {
+  .sommaire-grille,
+  .voisins {
+    grid-template-columns: 1fr;
+  }
+  .voisins a.droite {
+    text-align: left;
+  }
+}

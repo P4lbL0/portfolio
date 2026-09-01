@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Bande from "@/components/Bande";
 import Blocs from "@/components/Blocs";
 import Pied from "@/components/Pied";
+import SommaireProjets from "@/components/SommaireProjets";
 import { riche } from "@/lib/riche";
 import { experiences, getExperience } from "@/lib/content";
 
@@ -57,6 +58,15 @@ export default async function FicheExperience({ params }: Params) {
       </header>
 
       {xp.chiffres ? <Bande chiffres={xp.chiffres} /> : null}
+
+      {xp.projets ? (
+        <SommaireProjets
+          base={xp.slug}
+          projets={xp.projets}
+          titre={`Les ${xp.projets.length} chantiers`}
+          chapeau="Chaque chantier a sa page. Les deux premiers forment le projet phare ; les suivants sont les missions menées en parallèle, de la plus lourde à la plus modeste."
+        />
+      ) : null}
 
       <div className="wrap">
         <section className="sec">

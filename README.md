@@ -61,6 +61,27 @@ sans fiche dédiée. Seuls `slug`, `nom`, `resume`, `statut`, `enLigne` et
 Même principe, dans le tableau `experiences`. L'adresse sera
 `/experiences/le-slug`.
 
+### Ajouter un chantier à une expérience
+
+Une expérience peut détailler ses chantiers, chacun sur sa propre page. Ils
+vivent dans `projetsStage` (juste avant `experiences` dans `lib/content.ts`) et
+sont branchés par `projets: projetsStage` sur l'expérience concernée.
+
+Ajouter un objet à ce tableau suffit : la carte apparaît dans le sommaire de la
+fiche, la page est générée à `/experiences/airbay-data/le-slug`, et les liens
+« chantier précédent / suivant » se recalculent tout seuls.
+
+Les champs propres à un chantier :
+
+| Champ | À quoi il sert |
+| --- | --- |
+| `numero` | Le grand chiffre corail, `"01"`, `"02"`… |
+| `titre` | Le nom du chantier |
+| `tag` | L'étiquette au-dessus du titre (« Projet phare — premier volet ») |
+| `accroche` | La ligne corail de la carte : un chiffre qui frappe |
+| `resume` | Le paragraphe de la carte du sommaire |
+| `sousTitre`, `meta`, `stack`, `chiffres`, `contenu` | Comme une fiche normale |
+
 ### Mettre sa photo
 
 1. Déposer le fichier dans `public/` (par exemple `public/angelos.jpg`).
@@ -109,10 +130,12 @@ app/
   globals.css                 tout le design
   projets/[slug]/page.tsx     une fiche projet
   experiences/[slug]/page.tsx une fiche expérience
+  experiences/[slug]/[projet]/page.tsx  un chantier de cette expérience
 components/
   Actions.tsx                 les boutons d'accès en tête de fiche
   Bande.tsx                   la bande corail de chiffres
   Blocs.tsx                   le rendu des blocs de contenu
+  SommaireProjets.tsx         la grille de chantiers en tête de fiche
   Pied.tsx                    le pied de page
   ThemeToggle.tsx             la bascule clair / sombre
 lib/
@@ -142,7 +165,13 @@ et son choix mémorisé.
 
 ## Confidentialité
 
-La fiche du stage chez Airbay Data est volontairement dépourvue de noms de
-produits, de noms de clients, de noms de personnes et de tout montant. Les
-volumes (dossiers, gigaoctets, utilisateurs) sont publiables. Garder cette règle
-si la fiche est enrichie.
+La fiche du stage chez Airbay Data et ses neuf chantiers sont volontairement
+dépourvus de noms de produits, de noms de clients, de noms de personnes et de
+tout montant. Les produits internes sont désignés par ce qu'ils font — « le CRM
+d'audit », « le CRM commercial ». Garder cette règle si les fiches sont
+enrichies.
+
+Sont publiables, en revanche, et validés comme tels : le nom de l'entreprise,
+le secteur (rénovation énergétique, dispositif des Certificats d'Économie
+d'Énergie) et tous les volumes — dossiers, gigaoctets, utilisateurs, comptages
+d'opérations.
