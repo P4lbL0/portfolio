@@ -45,6 +45,14 @@ export default async function FicheExperience({ params }: Params) {
               <span key={m}>{riche(m)}</span>
             ))}
           </div>
+
+          {xp.stack && xp.stack.length > 0 ? (
+            <div className="stack-tags">
+              {xp.stack.map((t) => (
+                <span key={t}>{t}</span>
+              ))}
+            </div>
+          ) : null}
         </div>
       </header>
 

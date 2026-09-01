@@ -25,19 +25,32 @@ Ajouter un objet dans le tableau `projets` :
   statut: "En ligne · mon-projet.vercel.app",
   enLigne: true,               // met la pastille corail
   vedette: true,               // true = fiche détaillée ; false = simple ligne
+
+  // Les deux boutons d'accès en haut de la fiche, et le lien direct
+  // depuis la page d'accueil.
+  urlLive: "https://mon-projet.vercel.app",
+  urlCode: "https://github.com/P4lbL0/mon-projet",
+
   sousTitre: "Le chapeau de la fiche.",
-  meta: ["Projet personnel", "En ligne : **mon-projet.vercel.app**"],
+  meta: ["Projet personnel", "Depuis **2026**"],
+  stack: ["Next.js", "TypeScript", "Supabase"],
   chiffres: [{ valeur: "12", label: "quelque chose" }],
   contenu: [
     { type: "para", texte: "Un paragraphe." },
-    { type: "titre", texte: "Le difficile" },
+    { type: "titre", texte: "Ce que ça fait" },
+    { type: "grille", items: [{ titre: "Une fonction", texte: "Ce qu'elle fait." }] },
+    { type: "titre", texte: "Ce qui était difficile" },
     { type: "liste", items: [{ fort: "Un point.", texte: "Son explication." }] },
     { type: "citation", texte: "Une phrase qui résume." },
     { type: "reserve", texte: "Capture à venir" },
   ],
-  liens: [{ label: "En ligne", url: "https://…" }],
 }
 ```
+
+`urlLive` et `urlCode` sont ce qui rend le projet **accessible** : ils fabriquent
+les deux boutons en haut de la fiche, le lien cliquable sur la page d'accueil, et
+les liens de fin de fiche. Un projet sans `urlLive` affiche simplement son statut,
+sans lien.
 
 `vedette: false` suffit pour un petit projet : il apparaîtra dans « Et aussi »
 sans fiche dédiée. Seuls `slug`, `nom`, `resume`, `statut`, `enLigne` et
@@ -58,14 +71,15 @@ réservé au lieu d'une image cassée.
 
 ### Les types de blocs disponibles
 
-| Type       | À quoi ça sert                                      |
-| ---------- | --------------------------------------------------- |
-| `para`     | Un paragraphe de texte courant                       |
-| `titre`    | Un sous-titre dans la fiche                          |
-| `liste`    | Une liste à puces, chaque point avec un début en gras |
-| `citation` | La phrase mise en exergue, filet corail à gauche     |
-| `image`    | Une image avec légende (`src`, `alt`, `legende`)     |
-| `reserve`  | Un cadre en pointillés, en attendant un vrai visuel  |
+| Type       | À quoi ça sert                                                    |
+| ---------- | ----------------------------------------------------------------- |
+| `para`     | Un paragraphe de texte courant                                     |
+| `titre`    | Un sous-titre dans la fiche                                        |
+| `grille`   | Les fonctionnalités en colonnes, pour ce qui se scanne au lieu de se lire |
+| `liste`    | Une liste à puces, chaque point avec un début en gras              |
+| `citation` | La phrase mise en exergue, filet corail à gauche                   |
+| `image`    | Une image avec légende (`src`, `alt`, `legende`)                   |
+| `reserve`  | Un cadre en pointillés, en attendant un vrai visuel                |
 
 Dans les textes, `**gras**` et `_italique_` fonctionnent.
 
@@ -96,6 +110,7 @@ app/
   projets/[slug]/page.tsx     une fiche projet
   experiences/[slug]/page.tsx une fiche expérience
 components/
+  Actions.tsx                 les boutons d'accès en tête de fiche
   Bande.tsx                   la bande corail de chiffres
   Blocs.tsx                   le rendu des blocs de contenu
   Pied.tsx                    le pied de page

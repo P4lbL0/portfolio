@@ -32,6 +32,18 @@ export default function Blocs({ blocs }: { blocs: Bloc[] }) {
               </ul>
             );
 
+          case "grille":
+            return (
+              <div className="grille" key={i}>
+                {bloc.items.map((item) => (
+                  <div key={item.titre}>
+                    <h3>{item.titre}</h3>
+                    <p>{riche(item.texte)}</p>
+                  </div>
+                ))}
+              </div>
+            );
+
           case "citation":
             return (
               <blockquote className="pull" key={i}>

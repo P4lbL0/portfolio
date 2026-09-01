@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Actions from "@/components/Actions";
 import Bande from "@/components/Bande";
 import Blocs from "@/components/Blocs";
 import Pied from "@/components/Pied";
 import { riche } from "@/lib/riche";
-import { getProjet, projetsVedettes } from "@/lib/content";
+import { domaine, getProjet, projetsVedettes } from "@/lib/content";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -29,9 +30,15 @@ export default async function FicheProjet({ params }: Params) {
   const projet = getProjet(slug);
   if (!projet) notFound();
 
-  const liens = (projet.liens ?? []).map((l) => ({
+  // Le lecteur qui arrive au bout de la fiche doit retrouver l'accès au projet
+  // sans remonter en haut de page.
+  const liens = [
+    ...(projet.urlLive ? [{ label: "Voir en ligne", url: projet.urlLive }] : []),
+    ...(projet.urlCode ? [{ label: "Le code", url: projet.urlCode }] : []),
+    ...(projet.liens ?? []),
+  ].map((l) => ({
     label: l.label,
-    valeur: l.url.replace(/^https?:\/\/(www\.)?/, ""),
+    valeur: domaine(l.url),
     url: l.url,
   }));
 
@@ -46,10 +53,20 @@ export default async function FicheProjet({ params }: Params) {
           <h1>{projet.nom}</h1>
           {projet.sousTitre ? <p className="sub">{projet.sousTitre}</p> : null}
 
+          <Actions urlLive={projet.urlLive} urlCode={projet.urlCode} />
+
           {projet.meta && projet.meta.length > 0 ? (
             <div className="sheet-meta">
               {projet.meta.map((m) => (
                 <span key={m}>{riche(m)}</span>
+              ))}
+            </div>
+          ) : null}
+
+          {projet.stack && projet.stack.length > 0 ? (
+            <div className="stack-tags">
+              {projet.stack.map((t) => (
+                <span key={t}>{t}</span>
               ))}
             </div>
           ) : null}

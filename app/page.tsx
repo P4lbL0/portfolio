@@ -131,15 +131,38 @@ export default function Accueil() {
 
           <div className="projs">
             {projetsVedettes.map((p, i) => (
-              <Link key={p.slug} href={`/projets/${p.slug}`}>
+              <article key={p.slug}>
                 <span className="n">{String(i + 1).padStart(2, "0")}</span>
-                <h3>{p.nom}</h3>
-                <span className="go" aria-hidden="true">
-                  &rarr;
-                </span>
-                <span className={p.enLigne ? "live on" : "live"}>{p.statut}</span>
+
+                <h3>
+                  <Link href={`/projets/${p.slug}`}>{p.nom}</Link>
+                </h3>
+
+                <Link
+                  className="go"
+                  href={`/projets/${p.slug}`}
+                  aria-label={`Voir la fiche de ${p.nom}`}
+                >
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+
+                {/* Le lien direct vers le projet, sans passer par la fiche. */}
+                {p.urlLive ? (
+                  <a
+                    className="live on live-lien"
+                    href={p.urlLive}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {p.statut}
+                    <span aria-hidden="true"> ↗</span>
+                  </a>
+                ) : (
+                  <span className="live">{p.statut}</span>
+                )}
+
                 <p>{p.resume}</p>
-              </Link>
+              </article>
             ))}
           </div>
         </section>
